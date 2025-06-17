@@ -96,6 +96,14 @@ export const AuthService = {
       console.log('注册成功，服务器响应:', response.data);
       
       // 适配后端返回的格式
+      if (response.data.id || (response.data.user && response.data.user.id)) {
+      // 提取用户邮箱和密码
+      const email = userData.email;
+      const password = userData.password;
+      
+      // 使用刚注册的凭据进行登录
+      return await AuthService.login({ email, password });
+    }
       let user: User;
       let token: string = '';
       

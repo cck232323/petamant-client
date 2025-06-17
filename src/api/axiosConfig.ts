@@ -84,6 +84,12 @@ axiosInstance.interceptors.response.use(
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('userId');
       }
+      console.warn('最终处理401 - 清除所有认证信息并跳转登录页');
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = '/login';
+
+      return Promise.reject(error);
     }
     
     // 处理验证错误

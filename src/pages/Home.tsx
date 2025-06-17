@@ -95,8 +95,8 @@ const Home: React.FC = () => {
   return (
     <div className="container mt-5">
       <div className="text-center">
-        <h1 className="display-4">欢迎来到宠物活动聚合社交平台</h1>
-        <p className="lead">在这里，您可以发现和参与各种宠物相关的活动。</p>
+        <h1 className="display-4">Welcome to Petamant!</h1>
+        <p className="lead">Discover your pet events and networking here!</p>
       </div>
 
       <div className="row mt-5">
@@ -104,13 +104,13 @@ const Home: React.FC = () => {
         <div className="col-md-6">
           <div className="card">
             <div className="card-header">
-              <h2>用户登录</h2>
+              <h2>Login</h2>
             </div>
             <div className="card-body">
               {loginError && <div className="alert alert-danger">{loginError}</div>}
               <form onSubmit={handleLogin}>
                 <div className="form-group mb-3">
-                  <label htmlFor="email">邮箱</label>
+                  <label htmlFor="email">Email</label>
                   <input
                     type="email"
                     className="form-control"
@@ -121,7 +121,7 @@ const Home: React.FC = () => {
                   />
                 </div>
                 <div className="form-group mb-3">
-                  <label htmlFor="password">密码</label>
+                  <label htmlFor="password">Password</label>
                   <input
                     type="password"
                     className="form-control"
@@ -147,14 +147,14 @@ const Home: React.FC = () => {
         <div className="col-md-6">
           <div className="card">
             <div className="card-header">
-              <h2>新用户注册</h2>
+              <h2>New User Registration</h2>
             </div>
             <div className="card-body">
               {registerError && <div className="alert alert-danger">{registerError}</div>}
-              {registerSuccess && <div className="alert alert-success">注册成功！请使用您的邮箱和密码登录。</div>}
+              {registerSuccess && <div className="alert alert-success">Registration successful! Please log in with your email and password.</div>}
               <form onSubmit={handleRegister}>
                 <div className="form-group mb-3">
-                  <label htmlFor="registerEmail">邮箱</label>
+                  <label htmlFor="registerEmail">Email</label>
                   <input
                     type="email"
                     className="form-control"
@@ -165,7 +165,7 @@ const Home: React.FC = () => {
                   />
                 </div>
                 <div className="form-group mb-3">
-                  <label htmlFor="username">用户名</label>
+                  <label htmlFor="username">Name</label>
                   <input
                     type="text"
                     className="form-control"
@@ -176,7 +176,7 @@ const Home: React.FC = () => {
                   />
                 </div>
                 <div className="form-group mb-3">
-                  <label htmlFor="registerPassword">密码</label>
+                  <label htmlFor="registerPassword">Password</label>
                   <input
                     type="password"
                     className="form-control"
@@ -200,14 +200,14 @@ const Home: React.FC = () => {
       </div>
 
       {/* 浏览活动按钮 */}
-      <div className="text-center mt-4">
+      {/* <div className="text-center mt-4">
         <button 
           className="btn btn-info btn-lg" 
           onClick={() => navigate('/activities')}
         >
           直接浏览活动
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

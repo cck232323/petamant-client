@@ -13,8 +13,11 @@ export default defineConfig({
     proxy: {
       // 修改代理配置，确保正确转发请求
       '/api': {
-        target: 'http://localhost:5000', // 后端服务地址
+        target: 'http://localhost:8081', // 后端服务地址
+        // target: 'http://localhost:5000',
         changeOrigin: true,
+        // ？？？ for CORS issues
+        // rewrite: path => path.replace(/^\/api/, '')
         
       }
     }
