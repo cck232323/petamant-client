@@ -36,7 +36,7 @@ Running the Application
 Development Mode:
 bash
 npm start
-Open http://localhost:3000 to view the application in your browser. The page will reload if you make edits.
+Open http://localhost:5173 to view the application in your browser. The page will reload if you make edits.
 Production Build:
 bash
 npm run build
