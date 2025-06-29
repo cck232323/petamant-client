@@ -38,5 +38,20 @@ export const ActivityService = {
     // 正确的路径是 /activities/user/{id}/registered
     const response = await axios.get(`/activities/user/${userId}/registered`);
     return response.data;
+  },
+  createUserComments: async (activityId: number): Promise<any> => {
+    const response = await axios.post(`/activities/${activityId}/comments`);
+    console.log("createComments response", response.data);
+    return response.data;
+  },
+  getUserComments: async (activityId: number): Promise<any[]> => {
+    const response = await axios.get(`/activities/${activityId}/comments`);
+    console.log("getUserComments response", response.data);
+    if (!Array.isArray(response.data)) {
+      console.error('获取活动评论时，返回的数据格式不正确:', response.data);
+      throw new Error('Invalid response format for activity comments');
+    }
+    return response.data;
   }
+  // getActivityRegistrations: async (activityId: number): Promise<any[]> => {
 };

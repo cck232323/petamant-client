@@ -66,7 +66,7 @@ export const AuthService = {
       }
       
       // 使用新方法保存认证信息
-      AuthService.setAuthInfo(user.id, token);
+      AuthService.setAuthInfo(user.id, token, user.userName);
       
       // 检查是否有返回URL
       const returnUrl = sessionStorage.getItem('returnUrl');
@@ -133,7 +133,7 @@ export const AuthService = {
       }
       
       // 使用新方法保存认证信息
-      AuthService.setAuthInfo(user.id, token);
+      AuthService.setAuthInfo(user.id, token, user.userName);
       
       // 返回标准格式的响应
       return {
@@ -172,7 +172,16 @@ export const AuthService = {
     
     return false;
   },
-  
+  getUserName: (): string | null => {
+
+    // 先检查认证状态
+    if (!AuthService.isAuthenticated()) {
+      return null;
+    }
+    
+    const userName = localStorage.getItem('userName');
+    return userName ? userName : null;
+  },
   getUserId: (): number | null => {
     // 先检查认证状态
     if (!AuthService.isAuthenticated()) {
@@ -184,12 +193,24 @@ export const AuthService = {
   },
   
   // 添加新方法：同步保存认证信息
-  setAuthInfo: (userId: number, token: string): void => {
+  // setAuthInfo: (userId: number, token: string): void => {
+  //   // 同时保存到 localStorage 和 sessionStorage 作为备份
+  //   localStorage.setItem('userId', userId.toString());
+  //   localStorage.setItem('token', token);
+  //   // localStorage.setItem('userName', userName);
+  //   sessionStorage.setItem('userId', userId.toString());
+  //   sessionStorage.setItem('token', token);
+  //   // sessionStorage.setItem('userName', userName);
+  // },
+  // 修改 setAuthInfo 方法，添加 userName 参数
+  setAuthInfo: (userId: number, token: string, userName: string): void => {
     // 同时保存到 localStorage 和 sessionStorage 作为备份
     localStorage.setItem('userId', userId.toString());
     localStorage.setItem('token', token);
+    localStorage.setItem('userName', userName);
     sessionStorage.setItem('userId', userId.toString());
     sessionStorage.setItem('token', token);
+    sessionStorage.setItem('userName', userName);
   },
   
   // 添加新方法：尝试恢复认证状态
@@ -268,7 +289,7 @@ export const AuthService = {
     if (!localStorage.getItem('token') || !localStorage.getItem('userId')) {
       console.log('活动注册后加强认证状态');
       const tempToken = `temp-token-${Date.now()}`;
-      AuthService.setAuthInfo(userId, tempToken);
+      AuthService.setAuthInfo(userId, tempToken, `User-${userId}`);
       
       // 同时在会话存储中保存一份，作为备份
       sessionStorage.setItem('token', tempToken);

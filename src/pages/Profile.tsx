@@ -44,6 +44,7 @@ const Profile: React.FC = () => {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
+        console.log('获取用户资料响应:', response);
 
         if (!response.ok) {
           throw new Error(`获取用户资料失败: ${response.status} ${response.statusText}`);
@@ -51,6 +52,7 @@ const Profile: React.FC = () => {
 
         const userData = await response.json();
         setUser(userData);
+        console.log('获取用户资料响应:', userData);
 
         // 获取用户创建的活动
         const created = await ActivityService.getUserCreatedActivities(userId);

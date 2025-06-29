@@ -8,6 +8,9 @@ export interface Activity {
   creatorUserName: string;
   registrationsCount: number;
   registrations?: Registration[];
+  comments?: Comment[];
+  // createdAt: string;
+  // updatedAt: string;
   creator?: User;
 }
 

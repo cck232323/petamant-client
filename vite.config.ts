@@ -13,8 +13,8 @@ export default defineConfig({
     proxy: {
       // 修改代理配置，确保正确转发请求
       '/api': {
-        target: 'http://localhost:8081', // 后端服务地址
-        // target: 'http://localhost:5000',
+        target: 'http://localhost:8081', // docker后端服务地址
+        // target: 'http://localhost:5000', // 本地后端服务地址
         changeOrigin: true,
         // ？？？ for CORS issues
         // rewrite: path => path.replace(/^\/api/, '')
