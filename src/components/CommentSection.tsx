@@ -43,6 +43,79 @@ const adaptComments = (comments: any[]): Comment[] => {
     date: comment.date
   }));
 };
+const CommentItem: React.FC<{
+  comment: Comment;
+  activityId: number;
+  onCommentSuccess: () => void;
+  replyBoxId: number | null;
+  setReplyBoxId: (id: number | null) => void;
+  level: number;
+}> = ({ comment, activityId, onCommentSuccess, replyBoxId, setReplyBoxId, level }) => {
+  const [showReplies, setShowReplies] = useState(true); // 控制是否显示子评论
+
+  return (
+    <li className="list-group-item">
+      <div className="d-flex justify-content-between">
+        <div>
+          <strong>@{comment.userName}</strong>
+          {comment.replyToUserName && <> → @{comment.replyToUserName}</>}
+        </div>
+        <small>{new Date(comment.createdAt).toLocaleString()}</small>
+      </div>
+      <p>{comment.content}</p>
+      
+      <div className="d-flex gap-2">
+        <button
+          className="btn btn-sm btn-outline-primary"
+          onClick={() => setReplyBoxId(comment.id)}
+        >
+          Reply
+        </button>
+        
+        {comment.replies.length > 0 && (
+          <button
+            className="btn btn-sm btn-outline-secondary"
+            onClick={() => setShowReplies(!showReplies)}
+          >
+            {showReplies ? 'Hide Replies' : `Show Replies (${comment.replies.length})`}
+          </button>
+        )}
+      </div>
+
+      {replyBoxId === comment.id && (
+        <ReplyBox
+          activityId={activityId}
+          parentComment={comment}
+          onReplySuccess={() => {
+            setReplyBoxId(null);
+            onCommentSuccess();
+          }}
+        />
+      )}
+
+      {showReplies && comment.replies.length > 0 && (
+        <ul
+          className="list-group mt-3"
+          style={{
+            marginLeft: level >= 2 ? 0 : 20, // 控制视觉缩进
+          }}
+        >
+          {comment.replies.map(reply => (
+            <CommentItem
+              key={reply.id}
+              comment={reply}
+              activityId={activityId}
+              onCommentSuccess={onCommentSuccess}
+              replyBoxId={replyBoxId}
+              setReplyBoxId={setReplyBoxId}
+              level={level + 1}
+            />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+};
 
 interface ReplyBoxProps {
   activityId: number;
@@ -186,47 +259,60 @@ const CommentSection: React.FC<CommentSectionProps> = ({ activity, show, toggle,
           {topLevelComments.length === 0 ? (
             <p>No comments yet.</p>
           ) : (
-            <ul className="list-group">
-              {topLevelComments.map(comment => (
-                <li className="list-group-item" key={comment.id}>
-                  <div className="d-flex justify-content-between">
-                    <div>
-                      <strong>@{comment.userName}</strong> 
-                    </div>
-                    <small>{new Date(comment.createdAt).toLocaleString()}</small>
-                  </div>
-                  <p>{comment.content}</p>
-                  <button className="btn btn-sm btn-outline-primary" onClick={() => setReplyBoxId(comment.id)}>
-                    Reply
-                  </button>
-                  {replyBoxId === comment.id && (
-                    <ReplyBox
-                      activityId={activity.id}
-                      parentComment={comment}
-                      onReplySuccess={() => {
-                        setReplyBoxId(null);
-                        onCommentSuccess();
-                      }}
-                    />
-                  )}
+            // <ul className="list-group">
+            //   {topLevelComments.map(comment => (
+            //     <li className="list-group-item" key={comment.id}>
+            //       <div className="d-flex justify-content-between">
+            //         <div>
+            //           <strong>@{comment.userName}</strong> 
+            //         </div>
+            //         <small>{new Date(comment.createdAt).toLocaleString()}</small>
+            //       </div>
+            //       <p>{comment.content}</p>
+            //       <button className="btn btn-sm btn-outline-primary" onClick={() => setReplyBoxId(comment.id)}>
+            //         Reply
+            //       </button>
+            //       {replyBoxId === comment.id && (
+            //         <ReplyBox
+            //           activityId={activity.id}
+            //           parentComment={comment}
+            //           onReplySuccess={() => {
+            //             setReplyBoxId(null);
+            //             onCommentSuccess();
+            //           }}
+            //         />
+            //       )}
 
-                  {comment.replies.length > 0 && (
-                    <ul className="list-group mt-3 ms-4">
-                      {comment.replies.map(reply => (
-                        <li className="list-group-item" key={reply.id}>
-                          <div className="d-flex justify-content-between">
-                            <div>
-                              <strong>@{reply.userName}</strong> → @{reply.replyToUserName}
-                            </div>
-                            <small>{new Date(reply.createdAt).toLocaleString()}</small>
-                          </div>
-                          <p>{reply.content}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
+            //       {comment.replies.length > 0 && (
+            //         <ul className="list-group mt-3 ms-4">
+            //           {comment.replies.map(reply => (
+            //             <li className="list-group-item" key={reply.id}>
+            //               <div className="d-flex justify-content-between">
+            //                 <div>
+            //                   <strong>@{reply.userName}</strong> → @{reply.replyToUserName}
+            //                 </div>
+            //                 <small>{new Date(reply.createdAt).toLocaleString()}</small>
+            //               </div>
+            //               <p>{reply.content}</p>
+            //             </li>
+            //           ))}
+            //         </ul>
+            //       )}
+            //     </li>
+            //   ))}
+            // </ul>
+            <ul className="list-group">
+                {topLevelComments.map(comment => (
+                    <CommentItem
+                    key={comment.id}
+                    comment={comment}
+                    activityId={activity.id}
+                    onCommentSuccess={onCommentSuccess}
+                    replyBoxId={replyBoxId}
+                    setReplyBoxId={setReplyBoxId}
+                    level={0}
+                    />
+                ))}
             </ul>
           )}
 
@@ -259,4 +345,4 @@ const CommentSection: React.FC<CommentSectionProps> = ({ activity, show, toggle,
   );
 };
 
-export default CommentSection;
+export default CommentSection;  
